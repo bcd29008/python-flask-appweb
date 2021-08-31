@@ -11,13 +11,14 @@ from flask_fontawesome import FontAwesome
 
 # Salvando senhas de maneira apropriada no banco de dados.
 # https://werkzeug.palletsprojects.com/en/1.0.x/utils/#module-werkzeug.security
-# Para gerar a senha a ser salva no DB, faça:
-# senha = generate_password_hash('1234')
 from werkzeug.security import generate_password_hash, check_password_hash
+# Para gerar a senha a ser salva no DB, faça:
+# Abra um shell com o interpretador python e faça o import da linha acima
+# Execute a linha abaixo:
+# senha = generate_password_hash('1234')
 
 from forms.login import LoginForm
 from forms.contato import ContatoForm
-
 
 app = Flask(__name__)
 app.secret_key = "SECRET_KEY"
@@ -33,7 +34,6 @@ Usuario = Base.classes.Usuario
 Contato = Base.classes.Contato
 Telefone = Base.classes.Telefone
 
-
 boostrap = Bootstrap(app)
 fa = FontAwesome(app)
 
@@ -44,7 +44,7 @@ nav.init_app(app)
 def meunavbar():
     menu = Navbar('Minha aplicação')
     menu.items = [View('Inicial', 'inicio'), ]
-    menu.items.append(Subgroup('Contatos',View('Cadastrar','cadastrar_contato'),View('Listar','listar_contato')))
+    menu.items.append(Subgroup('Contatos', View('Cadastrar', 'cadastrar_contato'), View('Listar', 'listar_contato')))
     menu.items.append(Subgroup('Grupos', View('Cadastrar', 'inicio'), View('Listar', 'inicio')))
     menu.items.append(View('Sair', 'logout'))
     return menu
@@ -56,7 +56,7 @@ def autenticar():
         return redirect(url_for('inicio'))
     form = LoginForm()
     if form.validate_on_submit():
-        usuario = db.session.query(Usuario).filter(Usuario.username==form.username.data).first()
+        usuario = db.session.query(Usuario).filter(Usuario.username == form.username.data).first()
         if usuario:
             if check_password_hash(usuario.password, form.password.data):
                 session['logged_in'] = True
@@ -67,12 +67,14 @@ def autenticar():
         return redirect(url_for('autenticar'))
     return render_template('login.html', title='Autenticação de usuários', form=form)
 
+
 @app.route('/')
 def inicio():
     if not session.get('logged_in'):
         return redirect(url_for('autenticar'))
     else:
         return render_template('index.html', title='Inicial', usuario=session.get('nome'))
+
 
 @app.route("/logout")
 def logout():
@@ -94,18 +96,14 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-
-
-
-
 @app.route('/contatos')
 def listar_contato():
     if session.get('logged_in'):
-        form=ContatoForm()
+        form = ContatoForm()
         id_usuario = session.get('idUsuario')
-        contatos = db.session.query(Contato).filter(Contato.idUsuario==id_usuario).all()
+        contatos = db.session.query(Contato).filter(Contato.idUsuario == id_usuario).all()
 
-        return render_template('contato_listar.html',contatos=contatos, form=form)
+        return render_template('contato_listar.html', contatos=contatos, form=form)
     return redirect(url_for('autenticar'))
 
 
@@ -127,7 +125,8 @@ def dados_contato():
         id_contato = int(request.form['id'])
 
         # https://docs.sqlalchemy.org/en/14/orm/tutorial.html#common-filter-operators
-        contato = db.session.query(Contato).filter(Contato.idUsuario == id_usuario, Contato.idContato == id_contato).first()
+        contato = db.session.query(Contato).filter(Contato.idUsuario == id_usuario,
+                                                   Contato.idContato == id_contato).first()
 
         contado_dict = dict()
 
@@ -151,7 +150,7 @@ def atualizar_contato():
                                                    Contato.idContato == id_contato).first()
 
         contato.nome = nome
-        abc = datetime.strptime(dataNasc,'%d/%m/%Y').date()
+        abc = datetime.strptime(dataNasc, '%d/%m/%Y').date()
         contato.dataNasc = abc.strftime('%Y-%m-%d')
 
         db.session.commit()
@@ -159,14 +158,6 @@ def atualizar_contato():
         return redirect(url_for('autenticar'))
 
     return redirect(url_for('autenticar'))
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

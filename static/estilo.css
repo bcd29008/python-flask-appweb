@@ -13,3 +13,7 @@
 .login-container form{
     padding: 10%;
 }
+
+.pointer {
+  cursor: pointer;
+}

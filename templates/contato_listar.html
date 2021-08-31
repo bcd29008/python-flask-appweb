@@ -11,38 +11,43 @@
             <div class="col-md-6 ">
                 <h1>Contatos</h1>
                 <ul id="ulist" class="list-group">
-                {% for contato in contatos %}
-                    <h3>
-                        <a idContato={{ contato.idContato }} onclick="EditarContato(this)">
-                            <span class="fas fa-user-edit"></span></a>
-                        {{ contato.nome }}
-                    </h3>
-                    <p>Data de nascimento: {{ contato.dataNasc.strftime('%d/%m/%Y') }}</p>
-                    <span class="fas fa-plus-square" onclick="AdicionarTelefone(this)"></span>
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>Rótulo</th>
-                            <th>Número</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for tel in contato.telefone_collection %}
+                    {% for contato in contatos %}
+                        <h3>
+                            <a idContato={{ contato.idContato }} onclick="EditarContato(this)">
+                                <span class="fas fa-user-edit pointer"></span></a>
+                            {{ contato.nome }}
+                        </h3>
+                        <p>Data de nascimento: {{ contato.dataNasc.strftime('%d/%m/%Y') }}</p>
+                        <p><b>Grupos:</b> |
+                            {% for g in contato.membrogrupo_collection %}
+                                {{ g.grupo.nome }} |
+                            {% endfor %}
+
+                        </p>
+                        <span class="badge badge-primary pointer"
+                              onclick="AdicionarTelefone(this)">Adicionar telefone</span>
+                        <table class="table table-hover">
+                            <thead>
                             <tr>
-                                <td>{{ tel.rotulo }}</td>
-                                <td>{{ tel.numero }}</td>
-                                <td>
-                                    <a idTelefone={{ tel.idTelefone }} onclick="Excluir(this)" ><span class="fas fa-trash-alt"></span></a>
-                                </td>
+                                <th>Rótulo</th>
+                                <th>Número</th>
+                                <th></th>
                             </tr>
-
-
-                        {% endfor %}
-                        </tbody>
-                    </table>
-
-                {% endfor %}
+                            </thead>
+                            <tbody>
+                            {% for tel in contato.telefone_collection %}
+                                <tr>
+                                    <td>{{ tel.rotulo }}</td>
+                                    <td>{{ tel.numero }}</td>
+                                    <td>
+                                        <a idTelefone={{ tel.idTelefone }} onclick="Excluir(this)"><span
+                                                class="fas fa-trash-alt pointer"></span></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
@@ -88,7 +93,7 @@
                 </div>
             </div>
         </div>
-</div>
+    </div>
 
 
 
@@ -97,61 +102,61 @@
 {% block scripts %}
     {{ super() }}
     <script>
-    function EditarContato(elm) {
-    $.ajax({
-        url: '/contato',
-        data: {
-            id: $(elm).attr('idContato')
-        },
-        type: 'POST',
-        success: function(res) {
-            //povoar o form
-             $('#idContato').val(res['id']);
-            $('#nome').val(res['nome']);
-            $('#dataNasc').val(res['dataNasc']);
-
-            // exibindo o popup
-            $('#editModal').modal();
-
-            console.log(res);
-        },
-        error: function(error) {
-            console.log(error);
-        }
-    });
-    }
-
-    $(function(){
-          $('#btnAtualizar').click(function(){
+        function EditarContato(elm) {
             $.ajax({
-              url : '/atualizarcontato',
-              data : {idContato : $('#idContato').val(),nome: $('#nome').val(),dataNasc: $('#dataNasc').val()},
-              type : 'POST',
-              success: function(res){
-                $('#editModal').modal('hide');
-                location.reload();
-              },
-              error: function(error){
-                console.log(error);
-              }
+                url: '/contato',
+                data: {
+                    id: $(elm).attr('idContato')
+                },
+                type: 'POST',
+                success: function (res) {
+                    //povoar o form
+                    $('#idContato').val(res['id']);
+                    $('#nome').val(res['nome']);
+                    $('#dataNasc').val(res['dataNasc']);
+
+                    // exibindo o popup
+                    $('#editModal').modal();
+
+                    console.log(res);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
             });
-          });
-      });
+        }
+
+        $(function () {
+            $('#btnAtualizar').click(function () {
+                $.ajax({
+                    url: '/atualizarcontato',
+                    data: {idContato: $('#idContato').val(), nome: $('#nome').val(), dataNasc: $('#dataNasc').val()},
+                    type: 'POST',
+                    success: function (res) {
+                        $('#editModal').modal('hide');
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
 
 
-    function Excluir(elm){
-        $('#deleteModal').modal();
-    }
+        function Excluir(elm) {
+            $('#deleteModal').modal();
+        }
 
-    function Delete(){
-        $('#deleteModal').modal('hide');
-        alert("Preciso ser implementado")
-    }
+        function Delete() {
+            $('#deleteModal').modal('hide');
+            alert("Preciso ser implementado")
+        }
 
-    function AdicionarTelefone(){
-        {#Vai ser muito parecido com a lógica do editar Contato#}
-        alert("Preciso ser implementado")
-    }
+        function AdicionarTelefone() {
+            {#Vai ser muito parecido com a lógica do editar Contato#}
+            alert("Preciso ser implementado")
+        }
 
     </script>
 

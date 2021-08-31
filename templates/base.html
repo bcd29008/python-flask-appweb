@@ -5,7 +5,8 @@
     {{ fontawesome_html() }}
     <link rel=icon href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/svgs/solid/rocket.svg>
     <link rel="stylesheet" href="{{ url_for('.static', filename='estilo.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css">
 {% endblock %}
 {% block html_attribs %} lang="pt_BR"{% endblock %}
 
@@ -37,14 +38,15 @@
 {% block scripts %}
     {{ super() }}
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
-  <script type="text/javascript">
-    $(function () {
-      $('#dataNasc').datepicker({
-          format: 'dd/mm/yyyy',
-      });
-    });
-  </script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#dataNasc').datepicker({
+                format: 'dd/mm/yyyy',
+            });
+        });
+    </script>
 {% endblock %}
 
 </html>
